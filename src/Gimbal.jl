@@ -1,5 +1,5 @@
 module Gimbal
 
-include("pid.jl")
+include("components.jl")
 
 end
