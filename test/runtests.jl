@@ -7,7 +7,7 @@ using DifferentialEquations
 
 function plant(;name)
     @variables t F(t) x(t) dx(t)
-    D = Differential(t)  
+    D = Differential(t)
     eqs = [
         D(x) ~ dx
         D(dx) ~ F - 10*dx - 20*x

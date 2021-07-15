@@ -1,7 +1,5 @@
 using ModelingToolkit
 
-@parameters t
-
 function PID_factory(;name, kp=1.0, ki=0.0, kd=0.0)
     @parameters _kp _ki _kd
     @variables t e(t) Ie(t) de(t) u(t)
@@ -17,16 +15,45 @@ function PID_factory(;name, kp=1.0, ki=0.0, kd=0.0)
                                       _kp=>kp, _ki=>ki, _kd=>kd])
 end
 
-function lead_lag_factory(zero, pole;name)
+function lead_lag_factory(;name,k=1.0, zero=1.0, pole=0.0)
     @variables t ein(t) din(t) out(t) dout(t)
-    @parameters _zero _pole
+    @parameters _zero _pole _k
     D = Differential(t)
     eqs = [
         D(ein) ~ din
         D(out) ~ dout
-        _pole*dout + out ~ _zero*din + ein
+        dout + _pole*out ~ _k*(din + _zero*ein)
     ]
-    ODESystem(eqs, t;name, defaults=[out=>0.0,dout=>0.0,
-                                     ein=>0.0, din=>0.0,
-                                     _zero=>zero, _pole=>pole])
+    ODESystem(eqs, t ;name, defaults=[out=>0.0,dout=>0.0,
+                                      ein=>0.0, din=>0.0,
+                                      _zero=>zero, _pole=>pole, _k=>k])
+end
+
+using DifferentialEquations, Plots
+
+function plant(;name)
+    @variables t y(t) dy(t) ddy(t) dddy(t) x(t)
+    D = Differential(t)
+    eqs = [
+        D(y) ~ dy
+        D(dy) ~ ddy
+        D(ddy) ~ dddy
+        15x ~ dddy+10*ddy+27*dy+18*y
+    ]
+    ODESystem(eqs, t;name, defaults=[x=>0.0, y=>0.0,
+                                     dy=>0.0,ddy=>0.0, dddy=>0.0])
+end
+
+function test()
+    @variables t input(t)
+    @named p = plant()
+    @named lead = lead_lag_factory(k=130.0, zero=4.85, pole=100.0)
+    @named lag = lead_lag_factory(k=1.0, zero=0.8, pole=0.08)
+    connections = [lead.ein ~ 1/(1+exp(-100*(t-1)))-p.y
+                   lag.ein ~ lead.out
+                   p.x ~ lag.out]
+    @named connected = ODESystem(connections ; systems=[p, lead, lag])
+    sys = structural_simplify(connected)
+    prob = ODEProblem(sys,[],(0.0,60.0))
+    plot(solve(prob),vars=[p.y])
 end
