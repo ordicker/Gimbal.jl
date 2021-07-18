@@ -29,4 +29,19 @@ function lead_lag_factory(;name,k=1.0, zero=1.0, pole=0.0)
                                       _zero=>zero, _pole=>pole, _k=>k])
 end
 
-export PID_factory, lead_lag_factory
+function sensor(;name, bw=1)
+    @variables t input(t) output(t) doutput(t) ddoutput(t)
+    @parameters _bw
+    D = Differential(t)
+    eqs = [
+        D(output) ~ doutput
+        D(doutput) ~ ddoutput
+        input ~ output+4e-4*doutput+1e-6*ddoutput 
+    ]
+    ODESystem(eqs, t ;name, defaults=[output=>0.0, doutput=>0.0,
+                                      ddoutput=>0.0, input=>0.0,
+                                      _bw=>bw])
+end
+
+
+export PID_factory, lead_lag_factory, sensor
