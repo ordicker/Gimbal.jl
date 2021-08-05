@@ -22,9 +22,9 @@ function lead_lag_factory(;name,k=1.0, zero=1.0, pole=0.0)
     eqs = [
         D(input) ~ dinput
         D(output) ~ doutput
-        doutput + _pole*output ~ _k*(dinput + _zero*input)
+        _pole*doutput + output ~ _k*(_zero*dinput + input)
     ]
-    ODESystem(eqs, t ;name, defaults=[output=>0.0,doutput=>0.0,
+    ODESystem(eqs, t ;name, defaults=[output=>0.0, doutput=>0.0,
                                       input=>0.0, dinput=>0.0,
                                       _zero=>zero, _pole=>pole, _k=>k])
 end
