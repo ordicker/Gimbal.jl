@@ -88,29 +88,30 @@ function gimbal_test()
     @named lead = lead_lag_factory(k=1.0, zero=Z3, pole=P3)
     @named pid2 = PID_factory(kp=Z4,ki=1.0,kd=0.0)
     @named p = gimbal_plant(J=J,k_s=k_s,k_v=k_v,ω_brk=ω_brk,T_c=T_c)
-    @named gyro = sensor(bw=10.0)
+    @named gyro = sensor(bw=485.0)
     connections = [
         p.ω_body ~ 16*π^2/180*sin(2π*2t)
+        #p.ω_body ~ 1/(1+exp(-100*(t-1)))
         #pid1.e ~ 1/(1+exp(-100*(t-1)))-p.ω
-        #gyro.input ~ p.ω
-        #pid1.e ~ -gyro.output
-        pid1.e ~ -p.ω
-        lag.input ~ pid1.u 
+        #pid1.e ~ -p.ω
+        gyro.input ~ p.ω
+        pid1.e ~ -gyro.output
+        lag.input ~ pid1.u
         lead.input ~ lag.output 
         pid2.e ~ lead.output
         p.T ~ 20*0.339*min(max(K_dc*pid2.u,-2.5),2.5)]
-        #p.T ~ 20*pid2.u]
+    
     #connections = [
     #    p.ω_body ~ 16*π^2/180*sin(2π*2t)
     #    gyro.input ~ -p.ω
     #    pid1.e ~ gyro.output
-    #    #pid1.e ~ -p.ω
-    #    p.T ~ 800*pid1.u]
+    #    p.T ~ pid1.u]
 
     
-    @named connected = ODESystem(connections ; systems=[pid1,pid2,lead,lag,p])
+    @named connected = ODESystem(connections ; systems=[pid1,pid2,lead,lag,p,gyro])
     #@named connected = ODESystem(connections ; systems=[pid1,p,gyro])
-    sys = structural_simplify(connected)
+    #sys = structural_simplify(connected)
+    sys = alias_elimination(connected)
     prob = ODEProblem(sys,[],(0.0,10.0))
-    return prob
+    return prob, p
 end

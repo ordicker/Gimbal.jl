@@ -31,16 +31,17 @@ end
 
 function sensor(;name, bw=1)
     @variables t input(t) output(t) doutput(t) ddoutput(t)
-    @parameters _bw
+    @parameters a2 a1
     D = Differential(t)
     eqs = [
         D(output) ~ doutput
         D(doutput) ~ ddoutput
-        input ~ output+4e-4*doutput+1e-6*ddoutput 
+        input ~ output+a1*doutput+a2*ddoutput
+        #output ~ input-(4e-4*doutput+1e-6*ddoutput)
     ]
     ODESystem(eqs, t ;name, defaults=[output=>0.0, doutput=>0.0,
                                       ddoutput=>0.0, input=>0.0,
-                                      _bw=>bw])
+                                      a1=>2*0.7/(2π*bw), a2=>1/(2π*bw^2)])
 end
 
 
