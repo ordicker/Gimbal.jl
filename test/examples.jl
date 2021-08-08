@@ -112,7 +112,8 @@ function gimbal_test()
     #    #p.T ~ 0.0]
 
     
-    @named connected = ODESystem(connections ; systems=[pid1,pid2,lead,lag,p,gyro])
+    @named connected = compose(ODESystem(connections,t),
+                               pid1, pid2, lead, lag, p, gyro)
     #@named connected = ODESystem(connections ; systems=[gyro])
     #sys = structural_simplify(connected)
     sys = alias_elimination(connected)
