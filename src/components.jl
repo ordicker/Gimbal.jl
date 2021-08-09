@@ -37,12 +37,28 @@ function sensor(;name, bw=1)
         D(output) ~ doutput
         D(doutput) ~ ddoutput
         input ~ output+a1*doutput+a2*ddoutput
-        #output ~ input-(4e-4*doutput+1e-6*ddoutput)
     ]
     ODESystem(eqs, t ;name, defaults=[output=>0.0, doutput=>0.0,
                                       ddoutput=>0.0, input=>0.0,
                                       a1=>2*0.7/(2π*bw), a2=>1/(2π*bw^2)])
 end
 
+function notch(;name,ω=1.0,gain=1.0,width=1.0)
+    @variables t input(t) dinput(t) ddinput(t) output(t) doutput(t) ddoutput(t)
+    @parameters i1 i2 o1 o2
+    D = Differential(t)
+    eqs = [
+        D(output) ~ doutput
+        D(doutput) ~ ddoutput
+        D(input) ~ dinput
+        D(dinput) ~ ddinput
+        input+i1*dinput+i2*ddinput ~ output+o1*doutput+o2*ddoutput
+    ]
+    ODESystem(eqs, t ;name, defaults=[output=>0.0, doutput=>0.0, ddoutput=>0.0,
+                                      input=>0.0, dinput=>0.0, ddinput=>0.0,
+                                      o1=>width/(2π*ω), o2=>1/(2π*ω)^2,
+                                      i1=>width*gain/(2π*ω), i2=>1/(2π*ω)^2])
 
-export PID_factory, lead_lag_factory, sensor
+end
+
+export PID_factory, lead_lag_factory, sensor, notch
