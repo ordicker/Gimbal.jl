@@ -115,6 +115,6 @@ function gimbal_test()
 
     #sys = structural_simplify(connected)
     sys = alias_elimination(connected)
-    prob = ODEProblem(sys,[],(0.0,10.0))
+    prob = ODEProblem(sys,[],(0.0,10.0),jac=true)
     return prob, p, sys
 end
