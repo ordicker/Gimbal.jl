@@ -1,4 +1,3 @@
-using ModelingToolkit
 
 function PID_factory(;name, kp=1.0, ki=0.0, kd=0.0)
     @parameters _kp _ki _kd
