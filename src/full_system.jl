@@ -1,22 +1,19 @@
 
-function gimbal_conntroller()
-    # plant params
-    J = 0.029
-    k_s = 0.2
-    k_v = 0.545
-    ω_brk = 0.074
-    T_c = 0.106
-    T_brk = 0.177
-    # controller params
-    K_dc = 6878.7
-    Z1 = 0.01
-    Z2 = 0.029
-    P2 = 0.16
-    Z3 = 0.06
-    P3 = 0.009
-    Z4 = 0.01
-    bw = 465.0
-
+function gimbal_conntroller(;
+                            J = 0.029,
+                            k_s = 0.2,
+                            k_v = 0.545,
+                            ω_brk = 0.074,
+                            T_c = 0.106,
+                            T_brk = 0.177,
+                            K_dc = 6878.7,
+                            Z1 = 0.01,
+                            Z2 = 0.029,
+                            P2 = 0.16,
+                            Z3 = 0.06,
+                            P3 = 0.009,
+                            Z4 = 0.01,
+                            bw = 465.0)
     @variables t
     @named pid1 = PID_factory(kp=Z1,ki=1.0,kd=0.0)
     @named lag = lead_lag_factory(k=1.0, zero=Z2, pole=P2)
