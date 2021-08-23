@@ -1,7 +1,7 @@
 using DiffEqUncertainty, Distributions
 
 
-stab_error(sol,p) = mean(abs2,sol[p.ω])
+stab_error(sol,p) = sqrt(mean(abs2,sol[p.ω]))#*last(sol.t)
 
 function temp()
     prob, p, _ = gimbal_conntroller(k_s=Uniform(0.2-0.04,0.2+0.04),
@@ -11,6 +11,7 @@ function temp()
                                     T_brk=Uniform(0.177-0.0354,0.177+0.0354))
     g(x)=stab_error(x,p)
     expectation(g, prob, prob.u0, prob.p, Koopman(), Rodas5())
+    #expectation(g, prob, prob.u0, prob.p, MonteCarlo(), Rodas5(); trajectories = 100)
 end
 
-export temp
+export temp, stab_error
