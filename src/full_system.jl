@@ -47,8 +47,8 @@ function gimbal_conntroller(;
 
     sys = alias_elimination(connected)
     #sys = ode_order_lowering(sys)
-    #sys = structural_simplify(sys)
-    prob = ODEProblem(sys,[],(0.0,10.0),jac=true)
+    #sys = structural_simplify(connected)
+    prob = ODEProblem(sys,[],(0.0,1.0),jac=true)
     return prob, p, sys
 end
 
