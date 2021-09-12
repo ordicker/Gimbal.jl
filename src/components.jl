@@ -1,7 +1,7 @@
 
 function PID_factory(;name, kp=1.0, ki=0.0, kd=0.0)
-    @parameters _kp _ki _kd
-    @variables t e(t) Ie(t) de(t) u(t)
+    @parameters _kp _ki _kd t
+    @variables e(t) Ie(t) de(t) u(t)
     D = Differential(t)
     
     eqs = [
@@ -15,8 +15,8 @@ function PID_factory(;name, kp=1.0, ki=0.0, kd=0.0)
 end
 
 function lead_lag_factory(;name,k=1.0, zero=1.0, pole=0.0)
-    @variables t input(t) dinput(t) output(t) doutput(t)
-    @parameters _zero _pole _k
+    @parameters t _zero _pole _k
+    @variables input(t) dinput(t) output(t) doutput(t)
     D = Differential(t)
     eqs = [
         D(input) ~ dinput
@@ -29,8 +29,8 @@ function lead_lag_factory(;name,k=1.0, zero=1.0, pole=0.0)
 end
 
 function sensor(;name, bw=1)
-    @variables t input(t) output(t) doutput(t) ddoutput(t)
-    @parameters a2 a1
+    @parameters t a2 a1
+    @variables input(t) output(t) doutput(t) ddoutput(t)
     D = Differential(t)
     eqs = [
         D(output) ~ doutput
@@ -43,8 +43,8 @@ function sensor(;name, bw=1)
 end
 
 function notch(;name,ω=1.0,gain=1.0,width=1.0)
-    @variables t input(t) dinput(t) ddinput(t) output(t) doutput(t) ddoutput(t)
-    @parameters i1 i2 o1 o2
+    @parameters t i1 i2 o1 o2
+    @variables input(t) dinput(t) ddinput(t) output(t) doutput(t) ddoutput(t)
     D = Differential(t)
     eqs = [
         D(output) ~ doutput

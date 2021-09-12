@@ -14,7 +14,7 @@ function gimbal_conntroller(;
                             P3 = 0.009,
                             Z4 = 0.01,
                             bw = 465.0)
-    @variables t
+    @parameters t
     @named pid1 = PID_factory(kp=Z1,ki=1.0,kd=0.0)
     @named lag = lead_lag_factory(k=1.0, zero=Z2, pole=P2)
     @named lead = lead_lag_factory(k=1.0, zero=Z3, pole=P3)
@@ -47,7 +47,7 @@ function gimbal_conntroller(;
 
     sys = alias_elimination(connected)
     #sys = ode_order_lowering(sys)
-    #sys = structural_simplify(connected)
+    #sys = structural_simplify(sys)
     prob = ODEProblem(sys,[],(0.0,1.0),jac=true)
     return prob, p, sys
 end

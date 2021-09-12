@@ -1,7 +1,7 @@
 
 function gimbal_plant(;name, J=1.0, k_s=1.0, k_v=1.0, T_c=1.0, ω_brk=1.0, T_brk=1.0)
-    @variables t T(t) ω_rel(t) θ_rel(t) ω_body(t) ω(t)
-    @parameters _J _k_s _k_v _T_c _ω_brk _T_brk
+    @parameters t _J _k_s _k_v _T_c _ω_brk _T_brk 
+    @variables T(t) ω_rel(t) θ_rel(t) ω_body(t) ω(t)
     D = Differential(t)
     eqs = [
         D(θ_rel) ~ ω_rel
