@@ -1,5 +1,6 @@
 
 function gimbal_conntroller(;
+                            full=true,
                             J = 0.029,
                             k_s = 0.2,
                             k_v = 0.545,
@@ -25,31 +26,46 @@ function gimbal_conntroller(;
     @named notch4 = notch(ω=475.0,gain=0.1,width=0.3)
     @named p = gimbal_plant(;J,k_s,k_v,ω_brk,T_c,T_brk)
     @named gyro = sensor(bw=bw)
-    connections = [
-        p.ω_body ~ 16*π^2/180*sin(2π*2t)
-        gyro.input ~ p.ω
-        pid1.e ~ -(180/π)*gyro.output
-        lead.input ~ pid1.u
-        lag.input ~ lead.output 
-        pid2.e ~ lag.output
-        notch1.input ~ K_dc*pid2.u
-        notch2.input ~ notch1.output
-        notch3.input ~ notch2.output
-        notch4.input ~ notch3.output
-        p.T ~ 0.339*min(max(notch4.output,-2.5),2.5)
-    ]
-    
-    @named connected = compose(ODESystem(connections, t,
-                                         name=:full_ode), #TODO: remove it some day
-                               pid1, pid2, lead, lag,
-                               notch1, notch2, notch3, notch4,
-                               p, gyro)
+    tspan = (0.0,0.5)
+    if full
+        connections = [
+            p.ω_body ~ 16*π^2/180*sin(2π*2t)
+            gyro.input ~ p.ω
+            pid1.e ~ -(180/π)*gyro.output
+            lead.input ~ pid1.u
+            lag.input ~ lead.output 
+            pid2.e ~ lag.output
+            notch1.input ~ K_dc*pid2.u
+            notch2.input ~ notch1.output
+            notch3.input ~ notch2.output
+            notch4.input ~ notch3.output
+            p.T ~ 0.339*min(max(notch4.output,-2.5),2.5)]
+        @named _connected = ODESystem(connections, t)
+        @named connected = compose(_connected,
+                                   [pid1, pid2, lead, lag,
+                                    notch1, notch2, notch3, notch4,
+                                    p, gyro])
+        sys = alias_elimination(connected)
+        prob = ODEProblem(sys,[],tspan,jac=true)
+    else
+        connections = [
+            p.ω_body ~ 16*π^2/180*sin(2π*2t)
+            pid1.e ~ -(180/π)*p.ω
+            lead.input ~ pid1.u
+            lag.input ~ lead.output 
+            pid2.e ~ lag.output
+            p.T ~ 0.339*min(max(K_dc*pid2.u,-2.5),2.5)]
+        @named _connected = ODESystem(connections, t)
+        @named connected = compose(_connected,
+                                   [pid1, pid2, lead, lag,p])
+        sys = structural_simplify(dae_index_lowering(connected))
+        prob = ODEProblem(sys,[],tspan,jac=true)
+    end
 
-    sys = alias_elimination(connected)
-    #sys = ode_order_lowering(sys)
-    #sys = structural_simplify(sys)
-    prob = ODEProblem(sys,[],(0.0,1.0),jac=true)
-    return prob, p, sys
+
+    return  prob, p, sys 
 end
+
+
 
 export gimbal_conntroller
