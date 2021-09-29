@@ -1,6 +1,16 @@
-using DiffEqUncertainty, Distributions, ForwardDiff
+using DiffEqUncertainty, Distributions
 
-stab_error(sol,index) = 1e3*sqrt(mean(abs2,cumsum(sol[index,:])))
+#stab_error(sol,index) = 1e3*sqrt(mean(abs2,cumsum(sol[index,:])))
+function stab_error(sol, index)
+    θ = zero(eltype(sol))
+    err2 = zero(eltype(sol))
+    N=length(sol)
+    @inbounds for ω in sol[index,:]
+        θ+=ω
+        err2+= abs2(θ)
+    end
+    1e3*sqrt(err2/N)
+end
 
 #utilities
 indexof(sym,syms) = findfirst(isequal(sym),syms)

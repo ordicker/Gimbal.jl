@@ -1,14 +1,16 @@
 name = "Gimbal"
 uuid = "da257e27-e98d-4e1e-aad5-6b1b2dd07ade"
 authors = ["Or <or.dicker@gmail.com> and contributors"]
-version = "0.2.0"
+version = "0.3.0"
 
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 DiffEqUncertainty = "ef61062a-5684-51dc-bb67-a0fcdec5c97d"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+NLopt = "76087f3c-5699-56af-9a33-bf431cd00edd"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
 
