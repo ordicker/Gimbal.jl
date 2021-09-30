@@ -1,8 +1,10 @@
 using ForwardDiff, NLopt
 
+l = x->loss(x,full=false) #from uncertainty.jl
+
 function loss_nlopt(x,∇)
-    length(∇) > 0 ? ForwardDiff.gradient!(∇, loss,x) : nothing
-    loss(x) #from uncertainty.jl
+    length(∇) > 0 ? ForwardDiff.gradient!(∇, l,x) : nothing
+    l(x) 
 end
 
 function gimbal_optimize()
