@@ -26,7 +26,7 @@ function gimbal_conntroller(;
     @named notch4 = notch(ω=475.0,gain=0.1,width=0.3)
     @named p = gimbal_plant(;J,k_s,k_v,ω_brk,T_c,T_brk)
     @named gyro = sensor(bw=bw)
-    tspan = (0.0,0.5)
+    tspan = (0.0,5.0)
     if full
         connections = [
             p.ω_body ~ 16*π^2/180*sin(2π*2t)
