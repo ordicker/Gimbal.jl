@@ -1,6 +1,7 @@
 using DiffEqUncertainty, Distributions
 
 #stab_error(sol,index) = 1e3*sqrt(mean(abs2,cumsum(sol[index,:])))
+running_mean(sol,index) = 1e3*sqrt.(map(/,cumsum(cumsum(sol[index,:]).^2),1:length(sol)))
 function stab_error(sol, index)
     θ = zero(eltype(sol))
     err2 = zero(eltype(sol))
