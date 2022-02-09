@@ -16,6 +16,9 @@ SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
 
 [compat]
 BenchmarkTools = "1"
+ForwardDiff = "0.10"
+NLopt = "0.6"
+DifferentialEquations = "7"
 julia = "1.6"
 
 [extras]
