@@ -16,6 +16,7 @@ SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
 
 [compat]
 NLopt = "0.6"
+DifferentialEquations = "7"
 julia = "1.6"
 
 [extras]
