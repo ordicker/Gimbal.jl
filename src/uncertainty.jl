@@ -14,7 +14,8 @@ function stab_error(sol, index)
 end
 
 #utilities
-indexof(sym,syms) = findfirst(isequal(sym),syms)
+indexof(sym::Num,syms) = findfirst(isequal(sym),syms)
+indexof(sym::Symbol,syms) = findfirst(isequal(sym),[s.name for s in syms])
 
 function loss(θ;full=true)
     Z1,Z2,P2,Z3,P3,Z4 = θ

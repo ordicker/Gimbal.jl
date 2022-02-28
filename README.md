@@ -36,4 +36,4 @@ plot(sol[p.ω])
 - [ ] reduce allocation at gimbal_optimize
 - [ ] add discontinuity [callbacks](https://mtk.sciml.ai/stable/basics/Composition/#Example:-Friction)
 - [ ] better TTFX (precompile)
-- [ ] update to julia 1.7 and MTK 8.X
+- [X] update to Julia 1.7 and MTK 8.X

@@ -58,7 +58,8 @@ function gimbal_conntroller(;
         @named _connected = ODESystem(connections, t)
         @named connected = compose(_connected,
                                    [pid1, pid2, lead, lag,p])
-        sys = structural_simplify(dae_index_lowering(connected))
+        #sys = structural_simplify(dae_index_lowering(connected))
+        sys = dae_index_lowering(connected)
         prob = ODEProblem(sys,[],tspan,jac=true)
     end
 
