@@ -1,7 +1,7 @@
 # Gimbal.jl
 
 ## Installation
-- julia 1.6.0
+- julia 1.7.0
 - clone the project
 ```sh
 git clone https://github.com/ordicker/Gimbal.jl.git
@@ -37,3 +37,6 @@ plot(sol[p.ω])
 - [ ] add discontinuity [callbacks](https://mtk.sciml.ai/stable/basics/Composition/#Example:-Friction)
 - [ ] better TTFX (precompile)
 - [X] update to Julia 1.7 and MTK 8.X
+
+## Notes
+- MTK 8.3.0 broke the varmap_to_vars func with Distributions 
