@@ -33,7 +33,7 @@ plot(sol[p.ω])
 - [ ] Fix tests
 - [ ] Add K_dc to optimization
 - [ ] switch to discrete model 
-- [ ] reduce allocation at gimbal_optimize
+- [X] reduce allocation at gimbal_optimize (didn't help)
 - [ ] add discontinuity [callbacks](https://mtk.sciml.ai/stable/basics/Composition/#Example:-Friction)
 - [ ] better TTFX (precompile)
 - [X] update to Julia 1.7 and MTK 8.X
