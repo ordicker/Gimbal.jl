@@ -31,7 +31,7 @@ plot(sol[p.ω])
 
 ## TODOs
 - [ ] Fix tests
-- [ ] Add K_dc to optimization
+- [X] Add K_dc to optimization
 - [ ] switch to discrete model 
 - [X] reduce allocation at gimbal_optimize (didn't help)
 - [ ] add discontinuity [callbacks](https://mtk.sciml.ai/stable/basics/Composition/#Example:-Friction)

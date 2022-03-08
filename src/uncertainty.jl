@@ -18,9 +18,9 @@ indexof(sym::Num,syms) = findfirst(isequal(sym),syms)
 indexof(sym::Symbol,syms) = findfirst(isequal(sym),[s.name for s in syms])
 
 function loss(θ;full=true)
-    Z1,Z2,P2,Z3,P3,Z4 = θ
+    Z1,Z2,P2,Z3,P3,Z4,K_dc = θ
     prob, p , sys = gimbal_conntroller(;full,
-                                       Z1, Z2, P2, Z3, P3, Z4)
+                                       Z1, Z2, P2, Z3, P3, Z4,K_dc)
     
     pnew = get_defaults(sys)
     pnew[p._k_s] = Uniform(0.2-0.04,0.2+0.04)

@@ -20,6 +20,7 @@ function gimbal_conntroller(;
     @named lag = lead_lag_factory(k=1.0, zero=Z2, pole=P2)
     @named lead = lead_lag_factory(k=1.0, zero=Z3, pole=P3)
     @named pid2 = PID_factory(kp=Z4,ki=1.0,kd=0.0)
+    @named amp = amp_factory(a=K_dc)
     @named notch1 = notch(ω=100.0,gain=0.1,width=0.3)
     @named notch2 = notch(ω=330.0,gain=0.1,width=0.3)
     @named notch3 = notch(ω=380.0,gain=0.1,width=0.3)
@@ -35,14 +36,15 @@ function gimbal_conntroller(;
             lead.input ~ pid1.u
             lag.input ~ lead.output 
             pid2.e ~ lag.output
-            notch1.input ~ K_dc*pid2.u
+            amp.input ~ pid2.u
+            notch1.input ~ amp.output
             notch2.input ~ notch1.output
             notch3.input ~ notch2.output
             notch4.input ~ notch3.output
             p.T ~ 0.339*min(max(notch4.output,-2.5),2.5)]
         @named _connected = ODESystem(connections, t)
         @named connected = compose(_connected,
-                                   [pid1, pid2, lead, lag,
+                                   [pid1, pid2, lead, lag, amp,
                                     notch1, notch2, notch3, notch4,
                                     p, gyro])
         sys = alias_elimination(connected)
@@ -54,10 +56,12 @@ function gimbal_conntroller(;
             lead.input ~ pid1.u
             lag.input ~ lead.output 
             pid2.e ~ lag.output
-            p.T ~ 0.339*min(max(K_dc*pid2.u,-2.5),2.5)]
+            amp.input ~ pid2.u
+            p.T ~ 0.339*min(max(amp.output,-2.5),2.5)]
         @named _connected = ODESystem(connections, t)
         @named connected = compose(_connected,
-                                   [pid1, pid2, lead, lag,p])
+                                   [pid1, pid2, lead,
+                                    lag,  amp, p])
         #sys = structural_simplify(dae_index_lowering(connected))
         sys = dae_index_lowering(connected)
         prob = ODEProblem(sys,[],tspan,jac=true)

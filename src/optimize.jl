@@ -8,10 +8,10 @@ function loss_nlopt(x,∇)
 end
 
 function gimbal_optimize()
-    x₀ = [0.01,0.029,0.16,0.06,0.009,0.01]
-    opt = Opt(:LD_MMA, 6)
-    opt.lower_bounds = x₀*0.9
-    opt.upper_bounds = x₀*1.1
+    x₀ = [0.01,0.029,0.16,0.06,0.009,0.01,6878.0]
+    opt = Opt(:LD_MMA, 7)
+    opt.lower_bounds = x₀*0.8
+    opt.upper_bounds = x₀*1.2
     opt.xtol_rel = 1e-3
     #opt.maxtime = 10 #time limit in seconds
     opt.min_objective = loss_nlopt

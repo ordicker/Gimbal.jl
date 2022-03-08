@@ -60,4 +60,15 @@ function notch(;name,ω=1.0,gain=1.0,width=1.0)
 
 end
 
-export PID_factory, lead_lag_factory, sensor, notch
+function amp_factory(;name, a=1.0)
+    @parameters t, _a
+    @variables input(t) output(t)
+    eqs = [
+        output ~ _a*input
+    ]
+    ODESystem(eqs, t;name, defaults=[output=>0.0,
+                                     input=>0.0,
+                                     _a=>a])
+end
+
+export PID_factory, lead_lag_factory, amp_factory, sensor, notch
